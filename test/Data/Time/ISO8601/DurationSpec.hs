@@ -1,5 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE OverloadedStrings #-}
 module Data.Time.ISO8601.DurationSpec (main, spec) where
 
 import           Data.Time.ISO8601.Duration
@@ -12,9 +13,20 @@ main :: IO ()
 main = hspec spec
 
 spec :: Spec
-spec = prop "format/parse is idempotent" $ \(dur :: Duration) ->
-  counterexample (BS8.unpack (formatDuration dur)) $
-    parseDuration (formatDuration dur) === Right dur
+spec = do
+
+  prop "format/parse is idempotent" $ \(dur :: Duration) ->
+    counterexample (BS8.unpack (formatDuration dur)) $
+      parseDuration (formatDuration dur) === Right dur
+
+  describe "hand picked examples" $ do
+    tryExample "P3Y6M4DT12H30M5S"
+    tryExample "P6M4D"
+
+
+tryExample :: BS8.ByteString -> SpecWith (Arg Expectation)
+tryExample str = it ("parses "  ++ BS8.unpack str) $
+  fmap formatDuration (parseDuration str) `shouldBe` Right str
 
 
 instance Arbitrary DurSecond where arbitrary = DurSecond <$> (getPositive <$> arbitrary)
