@@ -3,6 +3,7 @@ module Data.Time.ISO8601.Interval (
   IntervalSpec (..)
 , Interval     (..)
 , interval
+, isoTime
 , parseInterval
 , formatInterval
 , formatIntervalB
@@ -68,7 +69,7 @@ isoTime = do
   return (UTCTime d dt)
 
 day :: Parser Day
-day = day1 <|> day2
+day = day2 <|> day1
   where day1 = fromGregorian <$> decimalN 4
                              <*> option 1 (char '-' *> intN 2)
                              <*> option 1 (char '-' *> intN 2)
