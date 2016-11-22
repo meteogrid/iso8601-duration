@@ -18,11 +18,14 @@ cabal-version:       >=1.10
 
 library
   exposed-modules:     Data.Time.ISO8601.Duration
+                     , Data.Time.ISO8601.Interval
   -- other-modules:       
   other-extensions:    ScopedTypeVariables, OverloadedStrings
   build-depends:       base       >= 4.7    && <4.10
                      , bytestring  >= 0.10   && <0.11
                      , attoparsec  >= 0.13.1 && < 0.14
+                     , time
+                     , bytestring-lexing
   hs-source-dirs:      src
   default-language:    Haskell2010
   ghc-options:         -Wall
@@ -36,6 +39,7 @@ test-suite spec
                      , hspec
                      , hspec-core >= 1.13
                      , QuickCheck
+                     , quickcheck-instances
                      , iso8601-duration
   hs-source-dirs:      test
   main-is:             Spec.hs

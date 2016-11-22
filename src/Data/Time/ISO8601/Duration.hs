@@ -30,14 +30,14 @@ import           Data.String (IsString, fromString)
 
 
 
-data DurSecond = DurSecond Integer                     deriving (Eq, Ord, Show)
+newtype DurSecond = DurSecond Integer                  deriving (Eq, Ord, Show)
 data DurMinute = DurMinute Integer (Maybe DurSecond)   deriving (Eq, Ord, Show)
 data DurHour   = DurHour   Integer (Maybe DurMinute)   deriving (Eq, Ord, Show)
 data DurTime   = DurTimeHour   DurHour
                | DurTimeMinute DurMinute
                | DurTimeSecond DurSecond               deriving (Eq, Ord, Show)
-data DurDay    = DurDay    Integer                     deriving (Eq, Ord, Show)
-data DurWeek   = DurWeek   Integer                     deriving (Eq, Ord, Show)
+newtype DurDay    = DurDay    Integer                  deriving (Eq, Ord, Show)
+newtype DurWeek   = DurWeek   Integer                  deriving (Eq, Ord, Show)
 data DurMonth  = DurMonth  Integer (Maybe DurDay)      deriving (Eq, Ord, Show)
 data DurYear   = DurYear   Integer (Maybe DurMonth)    deriving (Eq, Ord, Show)
 data DurDate   = DurDateDay   DurDay   (Maybe DurTime)
