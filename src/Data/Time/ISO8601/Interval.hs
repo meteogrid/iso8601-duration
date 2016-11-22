@@ -21,6 +21,7 @@ import           Data.Monoid ((<>))
 import           Data.String (IsString(..))
 import           Data.Time
 import           Data.Time.Calendar (fromGregorian)
+import           Data.Time.Calendar.WeekDate (fromWeekDateValid)
 
 
 data IntervalSpec
@@ -62,18 +63,24 @@ intervalSpec = startEnd
 
 isoTime :: Parser UTCTime
 isoTime = do
-  day <- day1 <|> day2
-  dt <- option 0 (oChar 'T' *> diffTime <* oChar 'Z')
-  return (UTCTime day dt)
+  d <- dayWeek <|> day
+  dt <- option 0 (oChar 'T' *> diffTime <* oChar 'Z') --FIXME: Parse tz offsets
+  return (UTCTime d dt)
 
-day1, day2 :: Parser Day
-day1 = fromGregorian <$> (fromIntegral <$> intN 4 <* char '-')
-                     <*> intN 2
-                     <*> option 1 (char '-' *> intN 2)
+day :: Parser Day
+day = day1 <|> day2
+  where day1 = fromGregorian <$> decimalN 4
+                             <*> option 1 (char '-' *> intN 2)
+                             <*> option 1 (char '-' *> intN 2)
+        day2 = fromGregorian <$> decimalN 4 <*> intN 2 <*> intN 2
 
-day2 = fromGregorian <$> (fromIntegral <$> intN 4 <* oChar '-')
-                     <*> intN 2 <* oChar '-'
-                     <*> intN 2
+dayWeek :: Parser Day
+dayWeek = maybe (fail "Invalid week day") return =<< go
+  where
+    go = fromWeekDateValid
+      <$> decimalN 4
+      <*> ("-W" *> intN 2)
+      <*> option 1 (char '-' *> intN 1)
 
 diffTime :: Parser DiffTime
 diffTime = do
@@ -83,7 +90,10 @@ diffTime = do
   return (s + m*60 + h*3600)
 
 intN :: Int -> Parser Int
-intN n =
+intN = decimalN
+
+decimalN :: Integral a => Int -> Parser a
+decimalN n =
   maybe (fail "not an int") (return . fst) =<< fmap readDecimal (AP.take n)
 
 oChar :: Char -> Parser (Maybe Char)
