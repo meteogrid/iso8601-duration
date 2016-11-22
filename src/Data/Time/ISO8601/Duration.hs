@@ -134,7 +134,7 @@ addDurationDate (DurDateDay d dt) =
 addDurationDate (DurDateMonth m dt) =
   maybe id addDurationTime dt . addDurMonth m
 
-addDurationDate (DurDateYear y dt) = undefined
+addDurationDate (DurDateYear y dt) =
   maybe id addDurationTime dt . addDurYear y
 
 addDurDay :: DurDay -> UTCTime -> UTCTime
