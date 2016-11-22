@@ -30,6 +30,7 @@ spec = do
     shouldParse "R/2014-12T20/P1W"
     shouldNotParse "R/201412T20/P1W"
     shouldParse "R/2014/P1W"
+    shouldParse "R1000/2014/P1W"
     shouldParse "R/2014-W01-1T19:00:00/P1W"
     shouldNotParse "R/2014-W1-1T19:00:00/P1W"
     shouldNotParse "R/2014-W01-8T19:00:00/P1W"

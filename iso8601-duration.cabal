@@ -36,6 +36,7 @@ test-suite spec
   type:                exitcode-stdio-1.0
   build-depends:       base
                      , bytestring
+                     , time
                      , hspec
                      , hspec-core >= 1.13
                      , QuickCheck

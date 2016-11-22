@@ -18,6 +18,7 @@ module Data.Time.ISO8601.Duration (
   , duration
   , formatDuration
   , formatDurationB
+  , addDuration
 ) where
 
 import           Control.Applicative
@@ -27,6 +28,7 @@ import           Data.ByteString.Builder (Builder, toLazyByteString)
 import qualified Data.ByteString.Lazy as LBS
 import           Data.Monoid ((<>))
 import           Data.String (IsString, fromString)
+import           Data.Time hiding (formatTime)
 
 
 
@@ -117,3 +119,52 @@ runBuilder = LBS.toStrict . toLazyByteString
 
 show' :: (Show a, IsString b) => a -> b
 show' = fromString . show
+
+
+
+addDuration :: Duration -> UTCTime -> UTCTime
+addDuration (DurationDate s) = addDurationDate s
+addDuration (DurationTime s) = addDurationTime s
+addDuration (DurationWeek s) = addDurationWeek s
+
+addDurationDate :: DurDate -> UTCTime -> UTCTime
+addDurationDate (DurDateDay d dt) =
+  maybe id addDurationTime dt . addDurDay d
+
+addDurationDate (DurDateMonth m dt) =
+  maybe id addDurationTime dt . addDurMonth m
+
+addDurationDate (DurDateYear y dt) = undefined
+  maybe id addDurationTime dt . addDurYear y
+
+addDurDay :: DurDay -> UTCTime -> UTCTime
+addDurDay (DurDay s) (UTCTime d dt) = UTCTime (addDays s d) dt
+
+addDurMonth :: DurMonth -> UTCTime -> UTCTime
+addDurMonth (DurMonth s m) (UTCTime d dt) =
+  maybe id addDurDay m $
+  UTCTime (addGregorianMonthsRollOver s d) dt
+
+addDurYear :: DurYear -> UTCTime -> UTCTime
+addDurYear (DurYear s m) (UTCTime d dt) =
+  maybe id addDurMonth m $
+  UTCTime (addGregorianYearsRollOver s d) dt
+
+
+addDurationTime :: DurTime -> UTCTime -> UTCTime
+addDurationTime = addUTCTime . durTimeToNDT
+  where
+    durTimeToNDT (DurTimeHour   s) = durHourToNDT   s
+    durTimeToNDT (DurTimeMinute s) = durMinuteToNDT s
+    durTimeToNDT (DurTimeSecond s) = durSecondToNDT s
+
+    durHourToNDT (DurHour s m) =
+      fromIntegral (s * 60 * 60) + maybe 0 durMinuteToNDT m
+
+    durMinuteToNDT (DurMinute s m) =
+      fromIntegral (s * 60) + maybe 0 durSecondToNDT m
+
+    durSecondToNDT (DurSecond s) = fromIntegral s
+
+addDurationWeek :: DurWeek -> UTCTime -> UTCTime
+addDurationWeek (DurWeek w) = addDurDay (DurDay (w*7)) 
