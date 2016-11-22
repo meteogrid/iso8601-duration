@@ -35,7 +35,7 @@ spec = do
 
 itAddsDuration :: Duration -> UTCTime -> UTCTime -> SpecWith (Arg Expectation)
 itAddsDuration d t e = it msg $ d `addDuration` t `shouldBe` e where
-  msg = BS8.unpack (formatDuration d) ++ " `addDuration` " ++ show t ++ " == " ++ show e
+  msg = show (formatDuration d) ++ " `addDuration` " ++ show t ++ " == " ++ show e
     
 unsafeParseDuration :: BS8.ByteString -> Duration
 unsafeParseDuration = either (const (error "unparsable")) id . parseDuration

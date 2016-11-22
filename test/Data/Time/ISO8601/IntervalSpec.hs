@@ -46,7 +46,7 @@ shouldNotParse str = it ("does not parse "  ++ BS8.unpack str) $
   parseInterval str `shouldSatisfy` isLeft
 
 parseFormatIdempotent :: BS8.ByteString -> SpecWith (Arg Expectation)
-parseFormatIdempotent str = it ("parse/format idempotent"  ++ BS8.unpack str) $
+parseFormatIdempotent str = it ("parse/format idempotent on "  ++ BS8.unpack str) $
   fmap formatInterval (parseInterval str) `shouldBe` Right str
 
 
