@@ -2,15 +2,15 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                iso8601-duration
-version:             0.1.0.0
+version:             0.1.1.0
 synopsis:            Types and parser for ISO8601 durations
--- description:         
+description:         Types and parser for ISO8601 durations and intervals
 homepage:            https://github.com/meteogrid/iso8601-duration
 license:             BSD3
 license-file:        LICENSE
 author:              Alberto Valverde (original code from Niklas Hambüchen?)
 maintainer:          alberto@meteogrid.com
--- copyright:           
+copyright:           2016-2018 Alberto Valverde
 category:            Data
 build-type:          Simple
 extra-source-files:  ChangeLog.md
@@ -45,6 +45,7 @@ test-suite spec
   hs-source-dirs:      test
   main-is:             Spec.hs
   other-modules:       Data.Time.ISO8601.DurationSpec
+                       Data.Time.ISO8601.IntervalSpec
   default-language:    Haskell2010
   ghc-options:         -Wall
                        -fwarn-incomplete-patterns
