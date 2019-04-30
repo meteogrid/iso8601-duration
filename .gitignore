@@ -3,3 +3,4 @@ cabal-dev
 .*.sw?
 cabal.sandbox.config
 .cabal-sandbox
+.stack-work/
