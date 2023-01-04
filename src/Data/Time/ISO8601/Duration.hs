@@ -26,7 +26,6 @@ import           Data.Attoparsec.ByteString.Char8
 import           Data.ByteString (ByteString)
 import           Data.ByteString.Builder (Builder, toLazyByteString)
 import qualified Data.ByteString.Lazy as LBS
-import           Data.Monoid ((<>))
 import           Data.String (IsString, fromString)
 import           Data.Time hiding (formatTime)
 
@@ -167,4 +166,4 @@ addDurationTime = addUTCTime . durTimeToNDT
     durSecondToNDT (DurSecond s) = fromIntegral s
 
 addDurationWeek :: DurWeek -> UTCTime -> UTCTime
-addDurationWeek (DurWeek w) = addDurDay (DurDay (w*7)) 
+addDurationWeek (DurWeek w) = addDurDay (DurDay (w*7))
