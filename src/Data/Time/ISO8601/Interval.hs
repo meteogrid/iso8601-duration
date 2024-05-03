@@ -12,16 +12,13 @@ module Data.Time.ISO8601.Interval (
 import Data.Time.ISO8601.Duration
 
 import           Control.Applicative
-import           Data.Attoparsec.ByteString (Parser)
 import           Data.Attoparsec.ByteString.Char8 as AP
 import           Data.ByteString.Lex.Integral (readDecimal)
 import           Data.ByteString (ByteString)
 import           Data.ByteString.Lazy (toStrict)
 import           Data.ByteString.Builder
-import           Data.Monoid ((<>))
 import           Data.String (IsString(..))
 import           Data.Time
-import           Data.Time.Calendar (fromGregorian)
 import           Data.Time.Calendar.WeekDate (fromWeekDateValid)
 
 
@@ -87,7 +84,7 @@ diffTime :: Parser DiffTime
 diffTime = do
   h <- fromIntegral <$> intN 2
   m <- fromIntegral <$> option 0 (oChar ':' *> intN 2)
-  s <- maybe 0 realToFrac <$> optional (oChar ':' *> scientific)
+  s <- maybe 0 realToFrac <$> optional (oChar ':' *> AP.scientific)
   return (s + m*60 + h*3600)
 
 intN :: Int -> Parser Int
